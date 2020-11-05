@@ -59,7 +59,6 @@ def buyModel(modelid, cookie, proxy):
         productid = sellerinfo[1]
         buy = requests.post(f'https://economy.roblox.com/v1/purchases/products/{productid}', data={'expectedCurrency': 1, 'expectedPrice': 0, 'expectedSellerId': sellerid}, cookies=cookies, headers={'x-csrf-token': token}, proxies=proxy)
         if buy.status_code == 200:
-            print(colored(f'Successfully purchased model. Total: {len(buys)}', color='green'))
             print(f"{Fore.WHITE}[ {Fore.GREEN}+ {Fore.WHITE}] {Fore.LIGHTBLACK_EX}Success | Successfully purchased model. Total: {Fore.WHITE}{len(buys)}")
             buys.append(productid)
         elif buy.status_code == 429:
