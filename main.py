@@ -49,28 +49,28 @@ def getToken(cookie, proxy):
     if r.status_code == 200 or r.status_code == 403:
         return r.headers["x-csrf-token"]
 def buyModel(modelid, cookie, proxy):
-    token = getToken(cookie, proxy)
-    cookies = {
-        '.ROBLOSECURITY': cookie
-    }
-    sellerinfo = getSellerInfo(cookie, modelid, proxy)
-    sellerid = sellerinfo[0]
-    productid = sellerinfo[1]
-    buy = requests.post(f'https://economy.roblox.com/v1/purchases/products/{productid}', data={'expectedCurrency': 1, 'expectedPrice': 0, 'expectedSellerId': sellerid}, cookies=cookies, headers={'x-csrf-token': token}, proxies=proxy)
-    if buy.status_code == 200:
-        print(colored(f'Successfully purchased model. Total: {len(buys)}', color='green'))
-        print(f"{Fore.WHITE}[ {Fore.GREEN}+ {Fore.WHITE}] {Fore.LIGHTBLACK_EX}Success | Successfully purchased model. Total: {Fore.WHITE}${len(buys)}")
-        buys.append(productid)
-    elif buy.status_code == 429:
-        print(f"{Fore.WHITE}[ {Fore.RED}- {Fore.WHITE}] {Fore.LIGHTBLACK_EX}Ran into an error | Ratelimited on proxy")
-    deleteAsset(modelid, cookie, proxy)
+    while True:
+        token = getToken(cookie, proxy)
+        cookies = {
+            '.ROBLOSECURITY': cookie
+        }
+        sellerinfo = getSellerInfo(cookie, modelid, proxy)
+        sellerid = sellerinfo[0]
+        productid = sellerinfo[1]
+        buy = requests.post(f'https://economy.roblox.com/v1/purchases/products/{productid}', data={'expectedCurrency': 1, 'expectedPrice': 0, 'expectedSellerId': sellerid}, cookies=cookies, headers={'x-csrf-token': token}, proxies=proxy)
+        if buy.status_code == 200:
+            print(colored(f'Successfully purchased model. Total: {len(buys)}', color='green'))
+            print(f"{Fore.WHITE}[ {Fore.GREEN}+ {Fore.WHITE}] {Fore.LIGHTBLACK_EX}Success | Successfully purchased model. Total: {Fore.WHITE}{len(buys)}")
+            buys.append(productid)
+        elif buy.status_code == 429:
+            print(f"{Fore.WHITE}[ {Fore.RED}- {Fore.WHITE}] {Fore.LIGHTBLACK_EX}Ran into an error | Ratelimited on proxy")
+        deleteAsset(modelid, cookie, proxy)
 
 print(f"{Fore.WHITE}[ {Fore.CYAN}§ {Fore.WHITE}] {Fore.LIGHTBLACK_EX}Roblox Model Botter made by {Fore.WHITE}Acier{Fore.LIGHTBLACK_EX} | Licensed under {Fore.WHITE}MIT {Fore.LIGHTBLACK_EX}License\n")
 threads = input(f"{Fore.WHITE}[ {Fore.CYAN}- {Fore.WHITE}] {Fore.LIGHTBLACK_EX}Threads: ")
 modelid = input(f"{Fore.WHITE}[ {Fore.CYAN}- {Fore.WHITE}] {Fore.LIGHTBLACK_EX}Model ID: ")
 os.system('cls()')
 for i in range(int(threads)):
-    while True:
         for login in logins:
             proxy = {
                 "https": "https://" + next(ProxyPool)
